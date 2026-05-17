@@ -35,7 +35,22 @@
                             <Run Text="Chaarkor" Foreground="{DynamicResource AccentBrush}" FontWeight="SemiBold" />
                         </TextBlock>
                     </Border>
-                    <TextBlock Text="v0.1.0" Classes="dim" VerticalAlignment="Center" Margin="4,1,0,0" />
+                    <TextBlock Text="{Binding CurrentVersionText}" Classes="dim" VerticalAlignment="Center" Margin="4,1,0,0" />
+
+                    <!-- Update available chip — only visible if newer release found on GitHub -->
+                    <Button IsVisible="{Binding IsUpdateAvailable}"
+                            Command="{Binding OpenReleasesPageCommand}"
+                            Background="#1A4DA3FF" BorderBrush="#4DA3FF" BorderThickness="1"
+                            CornerRadius="999" Padding="10,3"
+                            VerticalAlignment="Center" Margin="6,0,0,0"
+                            ToolTip.Tip="{Binding UpdateTooltip}">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <materialIcons:MaterialIcon Kind="DownloadOutline" Width="13" Height="13"
+                                                        Foreground="#7FBFFF" VerticalAlignment="Center" />
+                            <TextBlock Text="{Binding UpdateChipText}" VerticalAlignment="Center"
+                                       FontSize="11" Foreground="#7FBFFF" FontWeight="SemiBold" />
+                        </StackPanel>
+                    </Button>
                 </StackPanel>
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
@@ -128,7 +143,18 @@
                 <TextBlock Grid.Column="0" Text="{Binding GameStatusDetail}"
                            Classes="dim" VerticalAlignment="Center" />
                 <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="14" VerticalAlignment="Center">
-                    <TextBlock Text="AOB: 0/47" Classes="dim" />
+                    <!-- Update status (click to open releases when not up-to-date) -->
+                    <Button Background="Transparent" BorderThickness="0" Padding="0"
+                            Command="{Binding OpenReleasesPageCommand}"
+                            ToolTip.Tip="{Binding UpdateTooltip}"
+                            IsHitTestVisible="{Binding IsUpdateAvailable}">
+                        <StackPanel Orientation="Horizontal" Spacing="5" VerticalAlignment="Center">
+                            <Ellipse Width="7" Height="7" VerticalAlignment="Center"
+                                     Fill="{Binding UpdateFooterStatus, Converter={StaticResource UpdateFooterColorConverter}}" />
+                            <TextBlock Text="{Binding UpdateFooterText}" FontSize="12"
+                                       Foreground="{Binding UpdateFooterStatus, Converter={StaticResource UpdateFooterColorConverter}}" />
+                        </StackPanel>
+                    </Button>
                     <TextBlock Text="EAC: passive" Classes="dim" />
                     <TextBlock Text="Avalonia 12 · .NET 10" Classes="dim" />
                     <TextBlock Classes="dim">

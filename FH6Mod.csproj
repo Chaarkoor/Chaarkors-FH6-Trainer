@@ -22,9 +22,9 @@
     <Company>Chaarkor</Company>
     <Copyright>© 2026 Chaarkor</Copyright>
     <Description>All-in-one trainer for Forza Horizon 6. Built by Chaarkor. GPL-3.0.</Description>
-    <Version>0.1.0</Version>
-    <AssemblyVersion>0.1.0.0</AssemblyVersion>
-    <FileVersion>0.1.0.0</FileVersion>
+    <Version>0.2.1</Version>
+    <AssemblyVersion>0.2.1.0</AssemblyVersion>
+    <FileVersion>0.2.1.0</FileVersion>
     <NeutralLanguage>en-US</NeutralLanguage>
   </PropertyGroup>
 

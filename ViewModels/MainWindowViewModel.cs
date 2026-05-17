@@ -12,6 +12,7 @@ namespace FH6Mod.ViewModels;
 public partial class MainWindowViewModel : ViewModelBase
 {
     private readonly GameProcessService _gameProcess;
+    private readonly UpdateCheckService _updater;
 
     public ObservableCollection<NavItem> NavItems { get; }
 
@@ -30,14 +31,39 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty]
     private bool _isGameAttached;
 
+    [ObservableProperty]
+    private bool _isUpdateAvailable;
+
+    [ObservableProperty]
+    private string _updateChipText = "";       // short, fits in topbar chip
+
+    [ObservableProperty]
+    private string _updateTooltip = "";        // longer, shown on hover
+
+    // Footer status: "Checking…", "Up to date", "Update available · vX.Y.Z", "Update check failed"
+    [ObservableProperty]
+    private string _updateFooterText = "Checking for updates…";
+
+    [ObservableProperty]
+    private UpdateFooterStatus _updateFooterStatus = UpdateFooterStatus.Checking;
+
+    public string ReleasesUrl => UpdateCheckService.ReleasesUrl;
+
+    public string CurrentVersionText => $"v{App.Services.GetRequiredService<UpdateCheckService>().CurrentVersion.ToString(3)}";
+
     public MainWindowViewModel()
-        : this(App.Services.GetRequiredService<GameProcessService>())
+        : this(
+            App.Services.GetRequiredService<GameProcessService>(),
+            App.Services.GetRequiredService<UpdateCheckService>())
     {
     }
 
-    public MainWindowViewModel(GameProcessService gameProcess)
+    public MainWindowViewModel(GameProcessService gameProcess, UpdateCheckService updater)
     {
         _gameProcess = gameProcess;
+        _updater = updater;
+        _updater.StateChanged += OnUpdateStateChanged;
+        _updater.CheckInBackground();
 
         NavItems = new ObservableCollection<NavItem>
         {
@@ -83,6 +109,47 @@ public partial class MainWindowViewModel : ViewModelBase
             }
         });
     }
+
+    private void OnUpdateStateChanged()
+    {
+        // StateChanged is posted on UI thread by UpdateCheckService, no extra dispatch needed
+        if (_updater.LastError != null)
+        {
+            UpdateFooterText = "Update check failed (no internet?)";
+            UpdateFooterStatus = UpdateFooterStatus.Failed;
+            return;
+        }
+
+        if (_updater.IsUpdateAvailable)
+        {
+            IsUpdateAvailable = true;
+            UpdateChipText = $"{_updater.LatestTag} available";
+            UpdateTooltip  = $"New version {_updater.LatestTag} is available on GitHub (you have v{_updater.CurrentVersion.ToString(3)}). Click to open the releases page.";
+            UpdateFooterText = $"Update available · {_updater.LatestTag}";
+            UpdateFooterStatus = UpdateFooterStatus.UpdateAvailable;
+        }
+        else
+        {
+            UpdateFooterText = $"Up to date · v{_updater.CurrentVersion.ToString(3)}";
+            UpdateFooterStatus = UpdateFooterStatus.UpToDate;
+        }
+    }
+
+    [CommunityToolkit.Mvvm.Input.RelayCommand]
+    private void OpenReleasesPage()
+    {
+        try
+        {
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = UpdateCheckService.ReleasesUrl,
+                UseShellExecute = true,
+            });
+        }
+        catch { /* no browser → silent fail, link is also visible in UI */ }
+    }
 }
 
 public sealed record NavItem(string Label, MaterialIconKind Icon, Type PageType);
+
+public enum UpdateFooterStatus { Checking, UpToDate, UpdateAvailable, Failed }

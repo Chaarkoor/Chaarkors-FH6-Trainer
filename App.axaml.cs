@@ -36,6 +36,7 @@ public partial class App : Application
 
         services.AddSingleton<GameProcessService>();
         services.AddSingleton<CheatService>();
+        services.AddSingleton<UpdateCheckService>();
         services.AddSingleton<MainWindowViewModel>();
 
         services.AddTransient<DashboardViewModel>();
