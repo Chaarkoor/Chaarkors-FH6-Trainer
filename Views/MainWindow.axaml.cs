@@ -4,16 +4,50 @@ using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
 using Avalonia.Media;
 using Avalonia.Threading;
+using FH6Mod.Services;
 using FH6Mod.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FH6Mod.Views;
 
 public partial class MainWindow : Window
 {
+    private bool _updateDialogShown;
+
     public MainWindow()
     {
         InitializeComponent();
         DataContextChanged += (_, _) => HookGameStatus();
+        Opened += OnWindowOpened;
+    }
+
+    private void OnWindowOpened(object? sender, System.EventArgs e)
+    {
+        var updater = App.Services.GetRequiredService<UpdateCheckService>();
+        updater.StateChanged += TryShowUpdateDialog;
+        // In case the check already completed before the window opened
+        TryShowUpdateDialog();
+    }
+
+    private void TryShowUpdateDialog()
+    {
+        if (_updateDialogShown) return;
+        var updater = App.Services.GetRequiredService<UpdateCheckService>();
+        if (!updater.IsUpdateAvailable || updater.LatestTag is null) return;
+
+        _updateDialogShown = true;
+        Dispatcher.UIThread.Post(async () =>
+        {
+            try
+            {
+                var dlg = new UpdateDialog(
+                    updater.LatestTag!,
+                    updater.CurrentVersion.ToString(3),
+                    UpdateCheckService.ReleasesUrl);
+                await dlg.ShowDialog(this);
+            }
+            catch { /* never break the main UI for an update prompt */ }
+        });
     }
 
     private void HookGameStatus()

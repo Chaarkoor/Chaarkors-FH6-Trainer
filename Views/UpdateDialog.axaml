@@ -1,0 +1,45 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        x:Class="FH6Mod.Views.UpdateDialog"
+        Title="Update available"
+        Width="480" SizeToContent="Height"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False"
+        Background="{DynamicResource Surface0Brush}"
+        Icon="/Assets/logo.png">
+
+    <Border Padding="28" BorderBrush="{DynamicResource SurfaceBorderBrush}" BorderThickness="1">
+        <StackPanel Spacing="18">
+
+            <!-- Header -->
+            <StackPanel Orientation="Horizontal" Spacing="14">
+                <Border Width="48" Height="48" CornerRadius="12"
+                        Background="#1A4DA3FF" BorderBrush="#4DA3FF" BorderThickness="1">
+                    <materialIcons:MaterialIcon Kind="DownloadOutline" Width="26" Height="26"
+                                                Foreground="#7FBFFF"
+                                                HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Border>
+                <StackPanel VerticalAlignment="Center" Spacing="2">
+                    <TextBlock Text="A new version is available" Classes="h2" />
+                    <TextBlock x:Name="VersionLine" Classes="subtle" />
+                </StackPanel>
+            </StackPanel>
+
+            <!-- Body -->
+            <TextBlock TextWrapping="Wrap" Classes="subtle"
+                       Text="You're running an older build of Chaarkor's FH6 Trainer. A newer release is published on GitHub — grab it for the latest fixes, signatures, and features. You can ignore this and keep using the current build if you want." />
+
+            <!-- Buttons -->
+            <Grid ColumnDefinitions="*,Auto,Auto" Margin="0,4,0,0" ColumnSpacing="10">
+                <TextBlock x:Name="ChangelogHint" Grid.Column="0" Classes="dim" VerticalAlignment="Center"
+                           Text="Release notes are on GitHub." />
+                <Button Grid.Column="1" Classes="ghost" Content="Close"
+                        Click="OnCloseClick" MinWidth="90" />
+                <Button Grid.Column="2" Classes="primary" Content="Download on GitHub"
+                        Click="OnDownloadClick" MinWidth="160" />
+            </Grid>
+        </StackPanel>
+    </Border>
+</Window>
