@@ -1,0 +1,8 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:views="using:FH6Mod.Views"
+             xmlns:vm="using:FH6Mod.ViewModels.Pages"
+             x:Class="FH6Mod.Views.Pages.CustomizationView"
+             x:DataType="vm:CustomizationViewModel">
+    <views:PageContainer />
+</UserControl>

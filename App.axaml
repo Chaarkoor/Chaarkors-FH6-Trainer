@@ -1,0 +1,69 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:FH6Mod"
+             xmlns:conv="using:FH6Mod.Converters"
+             xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             x:Class="FH6Mod.App"
+             RequestedThemeVariant="Dark">
+
+    <Application.DataTemplates>
+        <local:ViewLocator/>
+    </Application.DataTemplates>
+
+    <Application.Styles>
+        <FluentTheme />
+        <materialIcons:MaterialIconStyles />
+        <StyleInclude Source="avares://ChaarkorFH6Mod/Styles/Theme.axaml" />
+        <StyleInclude Source="avares://ChaarkorFH6Mod/Styles/NavRail.axaml" />
+        <StyleInclude Source="avares://ChaarkorFH6Mod/Styles/Controls.axaml" />
+    </Application.Styles>
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <!-- Converters -->
+            <conv:StatusLabelConverter x:Key="StatusLabelConverter" />
+            <conv:StatusBgConverter    x:Key="StatusBgConverter" />
+            <conv:StatusFgConverter    x:Key="StatusFgConverter" />
+
+            <!-- Brand accent (Forza-vibe orange-red) -->
+            <Color x:Key="AccentColor">#FF6A1F</Color>
+            <Color x:Key="AccentColorHover">#FF8845</Color>
+            <Color x:Key="AccentColorPressed">#E55400</Color>
+            <Color x:Key="AccentColorMuted">#5C2810</Color>
+
+            <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}" />
+            <SolidColorBrush x:Key="AccentBrushHover" Color="{StaticResource AccentColorHover}" />
+            <SolidColorBrush x:Key="AccentBrushPressed" Color="{StaticResource AccentColorPressed}" />
+            <SolidColorBrush x:Key="AccentBrushMuted" Color="{StaticResource AccentColorMuted}" />
+
+            <!-- Surfaces (warm-tinted dark, OLED-ish but not pure black) -->
+            <Color x:Key="Surface0">#0A0A0E</Color>
+            <Color x:Key="Surface1">#13131A</Color>
+            <Color x:Key="Surface2">#1B1B26</Color>
+            <Color x:Key="Surface3">#252531</Color>
+            <Color x:Key="SurfaceBorder">#2F2F3D</Color>
+
+            <SolidColorBrush x:Key="Surface0Brush" Color="{StaticResource Surface0}" />
+            <SolidColorBrush x:Key="Surface1Brush" Color="{StaticResource Surface1}" />
+            <SolidColorBrush x:Key="Surface2Brush" Color="{StaticResource Surface2}" />
+            <SolidColorBrush x:Key="Surface3Brush" Color="{StaticResource Surface3}" />
+            <SolidColorBrush x:Key="SurfaceBorderBrush" Color="{StaticResource SurfaceBorder}" />
+
+            <!-- Text -->
+            <SolidColorBrush x:Key="TextPrimary" Color="#EDEDF2" />
+            <SolidColorBrush x:Key="TextSecondary" Color="#9A9AAB" />
+            <SolidColorBrush x:Key="TextDim" Color="#5F5F70" />
+
+            <!-- Status colors -->
+            <SolidColorBrush x:Key="StatusOk" Color="#3DDC97" />
+            <SolidColorBrush x:Key="StatusWarn" Color="#FFB347" />
+            <SolidColorBrush x:Key="StatusErr" Color="#FF5C5C" />
+
+            <!-- Accent gradient for hero elements -->
+            <LinearGradientBrush x:Key="AccentGradient" StartPoint="0%,0%" EndPoint="100%,100%">
+                <GradientStop Color="#FF6A1F" Offset="0" />
+                <GradientStop Color="#FF3D7A" Offset="1" />
+            </LinearGradientBrush>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

@@ -1,0 +1,143 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:FH6Mod.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="780"
+        Width="1200" Height="780"
+        MinWidth="980" MinHeight="640"
+        x:Class="FH6Mod.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="FH6 Mod by Chaarkor"
+        Background="{DynamicResource Surface0Brush}"
+        WindowStartupLocation="CenterScreen"
+        Icon="/Assets/logo.png">
+
+    <Grid RowDefinitions="44,*,32">
+
+        <!-- ===== Top bar ===== -->
+        <Border Grid.Row="0"
+                Background="{DynamicResource Surface0Brush}"
+                BorderBrush="{DynamicResource SurfaceBorderBrush}"
+                BorderThickness="0,0,0,1">
+            <Grid ColumnDefinitions="Auto,*,Auto" Margin="16,0">
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                    <Border Width="28" Height="28" CornerRadius="6" ClipToBounds="True">
+                        <Image Source="/Assets/logo.png" Stretch="UniformToFill" />
+                    </Border>
+                    <TextBlock Text="FH6 Mod" FontWeight="SemiBold" VerticalAlignment="Center" />
+                    <Border Background="{DynamicResource Surface2Brush}"
+                            CornerRadius="999" Padding="8,2"
+                            VerticalAlignment="Center" Margin="2,0,0,0">
+                        <TextBlock VerticalAlignment="Center" FontSize="11">
+                            <Run Text="by " Foreground="{DynamicResource TextSecondary}" />
+                            <Run Text="Chaarkor" Foreground="{DynamicResource AccentBrush}" FontWeight="SemiBold" />
+                        </TextBlock>
+                    </Border>
+                    <TextBlock Text="v0.1.0" Classes="dim" VerticalAlignment="Center" Margin="4,1,0,0" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                    <Ellipse x:Name="StatusDot" Width="9" Height="9"
+                             Fill="{DynamicResource StatusErr}"
+                             VerticalAlignment="Center">
+                        <Ellipse.Transitions>
+                            <Transitions>
+                                <BrushTransition Property="Fill" Duration="0:0:0.25" />
+                            </Transitions>
+                        </Ellipse.Transitions>
+                    </Ellipse>
+                    <TextBlock Text="{Binding GameStatusText}" Classes="subtle" VerticalAlignment="Center" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- ===== Main: sidebar + content ===== -->
+        <Grid Grid.Row="1" ColumnDefinitions="216,*">
+
+            <!-- Sidebar -->
+            <Border Grid.Column="0"
+                    Background="{DynamicResource Surface1Brush}"
+                    BorderBrush="{DynamicResource SurfaceBorderBrush}"
+                    BorderThickness="0,0,1,0">
+                <Grid RowDefinitions="*,Auto">
+                    <ListBox Grid.Row="0"
+                             Classes="nav"
+                             ItemsSource="{Binding NavItems}"
+                             SelectedItem="{Binding SelectedItem}"
+                             Background="Transparent"
+                             BorderThickness="0"
+                             Padding="0,12,0,12">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate x:DataType="vm:NavItem">
+                                <Grid ColumnDefinitions="3,Auto,*">
+                                    <Border Grid.Column="0" Name="SelectionBar" />
+                                    <materialIcons:MaterialIcon Grid.Column="1"
+                                                                Kind="{Binding Icon}"
+                                                                Width="18" Height="18"
+                                                                Margin="6,0,12,0"
+                                                                VerticalAlignment="Center" />
+                                    <TextBlock Grid.Column="2"
+                                               Text="{Binding Label}"
+                                               VerticalAlignment="Center"
+                                               FontSize="13" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                    <!-- Sidebar footer -->
+                    <Border Grid.Row="1" Padding="16,12,16,16">
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="EARLY ACCESS" Classes="eyebrow" />
+                            <TextBlock Text="UI scaffold — features wiring in progress."
+                                       Classes="dim" TextWrapping="Wrap" />
+                            <Separator Margin="0,4" Background="{DynamicResource SurfaceBorderBrush}" Height="1" />
+                            <TextBlock Classes="dim" FontSize="11">
+                                <Run Text="Crafted by " />
+                                <Run Text="Chaarkor" Foreground="{DynamicResource AccentBrush}" FontWeight="SemiBold" />
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!-- Content -->
+            <ContentControl Grid.Column="1"
+                            Content="{Binding CurrentPage}"
+                            Padding="0">
+                <ContentControl.Styles>
+                    <Style Selector="ContentControl">
+                        <Setter Property="Transitions">
+                            <Transitions>
+                                <DoubleTransition Property="Opacity" Duration="0:0:0.2" />
+                            </Transitions>
+                        </Setter>
+                    </Style>
+                </ContentControl.Styles>
+            </ContentControl>
+        </Grid>
+
+        <!-- ===== Status bar ===== -->
+        <Border Grid.Row="2"
+                Background="{DynamicResource Surface1Brush}"
+                BorderBrush="{DynamicResource SurfaceBorderBrush}"
+                BorderThickness="0,1,0,0">
+            <Grid ColumnDefinitions="*,Auto" Margin="16,0">
+                <TextBlock Grid.Column="0" Text="{Binding GameStatusDetail}"
+                           Classes="dim" VerticalAlignment="Center" />
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="14" VerticalAlignment="Center">
+                    <TextBlock Text="AOB: 0/47" Classes="dim" />
+                    <TextBlock Text="EAC: passive" Classes="dim" />
+                    <TextBlock Text="Avalonia 12 · .NET 10" Classes="dim" />
+                    <TextBlock Classes="dim">
+                        <Run Text="© " />
+                        <Run Text="Chaarkor" Foreground="{DynamicResource AccentBrush}" />
+                        <Run Text=" 2026" />
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

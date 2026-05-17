@@ -1,0 +1,148 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:vm="using:FH6Mod.ViewModels.Pages"
+             x:Class="FH6Mod.Views.Pages.SettingsView"
+             x:DataType="vm:SettingsViewModel">
+
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="36,28" Spacing="24">
+
+            <!-- Header -->
+            <StackPanel Spacing="6">
+                <StackPanel Orientation="Horizontal" Spacing="14">
+                    <Border Background="{DynamicResource Surface2Brush}"
+                            BorderBrush="{DynamicResource SurfaceBorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="10"
+                            Padding="10">
+                        <materialIcons:MaterialIcon Kind="{Binding PageIcon}" Width="22" Height="22"
+                                                    Foreground="{DynamicResource AccentBrush}" />
+                    </Border>
+                    <StackPanel VerticalAlignment="Center" Spacing="2">
+                        <TextBlock Text="{Binding PageTitle}" Classes="h1" />
+                        <TextBlock Text="{Binding PageSubtitle}" Classes="subtle" />
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+
+            <!-- ABOUT / CREDITS hero card -->
+            <Border Classes="card" Padding="28">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="22">
+                    <Border Grid.Column="0" Width="96" Height="96" CornerRadius="20" ClipToBounds="True">
+                        <Image Source="/Assets/logo.png" Stretch="UniformToFill" />
+                    </Border>
+
+                    <StackPanel Grid.Column="1" Spacing="6" VerticalAlignment="Center">
+                        <TextBlock Text="CREATED BY" Classes="eyebrow" />
+                        <TextBlock Text="Chaarkor" FontSize="28" FontWeight="Bold"
+                                   Foreground="{DynamicResource TextPrimary}" />
+                        <TextBlock Text="All-in-one trainer for Forza Horizon 6"
+                                   Classes="subtle" />
+                        <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,8,0,0">
+                            <Border Background="{DynamicResource Surface2Brush}"
+                                    CornerRadius="999" Padding="10,4">
+                                <TextBlock Text="v0.1.0  ·  GPL-3.0" FontSize="11"
+                                           Foreground="{DynamicResource TextSecondary}" />
+                            </Border>
+                            <Border Background="{DynamicResource Surface2Brush}"
+                                    CornerRadius="999" Padding="10,4">
+                                <TextBlock Text=".NET 10  ·  Avalonia 12" FontSize="11"
+                                           Foreground="{DynamicResource TextSecondary}" />
+                            </Border>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- ===== CREDITS & THANKS ===== -->
+            <StackPanel Spacing="10">
+                <TextBlock Text="CREDITS &amp; THANKS" Classes="eyebrow" />
+
+                <!-- Forza Mods — the foundation -->
+                <Border Classes="card" Padding="22">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16">
+                        <Border Grid.Column="0" Width="44" Height="44" CornerRadius="10"
+                                Background="{DynamicResource Surface2Brush}">
+                            <materialIcons:MaterialIcon Kind="Heart" Width="22" Height="22"
+                                                        Foreground="{DynamicResource AccentBrush}"
+                                                        HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Spacing="4" VerticalAlignment="Center">
+                            <TextBlock Classes="h3">
+                                <Run Text="Forza Mods" Foreground="{DynamicResource AccentBrush}" />
+                                <Run Text=" — injection foundations" Foreground="{DynamicResource TextPrimary}" />
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Classes="dim"
+                                       Text="This trainer wouldn't exist without their work. The entire memory injection base — AOB scanning, function detouring, code caves, x64 shellcode generation, CRC bypass for FH6 — comes from their open-source projects (GPL-3.0). All runtime hooks here are 1:1 ports adapted to our UI." />
+                            <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,4,0,0">
+                                <Border Background="{DynamicResource Surface2Brush}" CornerRadius="999" Padding="8,3">
+                                    <TextBlock Text="github.com/ForzaMods" FontSize="11"
+                                               Foreground="{DynamicResource TextSecondary}" />
+                                </Border>
+                                <Border Background="{DynamicResource Surface2Brush}" CornerRadius="999" Padding="8,3">
+                                    <TextBlock Text="discord.gg/forzamods" FontSize="11"
+                                               Foreground="{DynamicResource TextSecondary}" />
+                                </Border>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Reloaded -->
+                <Border Classes="card" Padding="22">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16">
+                        <Border Grid.Column="0" Width="44" Height="44" CornerRadius="10"
+                                Background="{DynamicResource Surface2Brush}">
+                            <materialIcons:MaterialIcon Kind="LightningBolt" Width="22" Height="22"
+                                                        Foreground="{DynamicResource AccentBrush}"
+                                                        HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Spacing="4" VerticalAlignment="Center">
+                            <TextBlock Classes="h3">
+                                <Run Text="Reloaded.Memory" Foreground="{DynamicResource AccentBrush}" />
+                                <Run Text=" — SIMD-accelerated AOB scanner" Foreground="{DynamicResource TextPrimary}" />
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Classes="dim"
+                                       Text="Ultra-fast AOB scanner used in the heart of our memory engine — scans the 49 MB FH6 binary in milliseconds." />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </StackPanel>
+
+            <!-- Settings list -->
+            <ItemsControl ItemsSource="{Binding Features}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel ItemWidth="320" ItemHeight="92" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:FeatureRow">
+                        <Border Classes="card" Margin="0,0,12,12">
+                            <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
+                                <StackPanel Grid.Column="0" Spacing="4">
+                                    <TextBlock Text="{Binding Name}" Classes="h3" />
+                                    <TextBlock Text="{Binding Hint}" Classes="dim" TextWrapping="Wrap" />
+                                </StackPanel>
+                                <Border Grid.Column="1" VerticalAlignment="Top" Padding="8,3" CornerRadius="999"
+                                        Background="{Binding Status, Converter={StaticResource StatusBgConverter}}">
+                                    <TextBlock Text="{Binding Status, Converter={StaticResource StatusLabelConverter}}"
+                                               FontSize="10" FontWeight="SemiBold"
+                                               Foreground="{Binding Status, Converter={StaticResource StatusFgConverter}}" />
+                                </Border>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <!-- Footer -->
+            <TextBlock Classes="dim" TextAlignment="Center" Margin="0,12">
+                <Run Text="Made with love by " />
+                <Run Text="Chaarkor" Foreground="{DynamicResource AccentBrush}" FontWeight="SemiBold" />
+                <Run Text=" · 2026 · Forza Horizon 6 · Single-player only" />
+            </TextBlock>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

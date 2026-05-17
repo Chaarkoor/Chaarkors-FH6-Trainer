@@ -1,0 +1,65 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:vm="using:FH6Mod.ViewModels.Pages"
+             mc:Ignorable="d"
+             x:Class="FH6Mod.Views.PageContainer"
+             x:DataType="vm:PageViewModelBase">
+
+    <Grid RowDefinitions="Auto,*" Margin="36,28,36,28">
+
+        <!-- Page header -->
+        <StackPanel Grid.Row="0" Spacing="6" Margin="0,0,0,24">
+            <StackPanel Orientation="Horizontal" Spacing="14">
+                <Border Background="{DynamicResource Surface2Brush}"
+                        BorderBrush="{DynamicResource SurfaceBorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="10"
+                        Padding="10">
+                    <materialIcons:MaterialIcon Kind="{Binding PageIcon}"
+                                                Width="22" Height="22"
+                                                Foreground="{DynamicResource AccentBrush}" />
+                </Border>
+                <StackPanel VerticalAlignment="Center" Spacing="2">
+                    <TextBlock Text="{Binding PageTitle}" Classes="h1" />
+                    <TextBlock Text="{Binding PageSubtitle}" Classes="subtle" />
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+
+        <!-- Feature grid -->
+        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled">
+            <ItemsControl ItemsSource="{Binding Features}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel ItemWidth="320" ItemHeight="92" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:FeatureRow">
+                        <Border Classes="card" Margin="0,0,12,12">
+                            <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
+                                <StackPanel Grid.Column="0" Spacing="4">
+                                    <TextBlock Text="{Binding Name}" Classes="h3" />
+                                    <TextBlock Text="{Binding Hint}" Classes="dim" TextWrapping="Wrap" />
+                                </StackPanel>
+                                <Border Grid.Column="1"
+                                        VerticalAlignment="Top"
+                                        Padding="8,3"
+                                        CornerRadius="999"
+                                        Background="{Binding Status, Converter={StaticResource StatusBgConverter}}">
+                                    <TextBlock Text="{Binding Status, Converter={StaticResource StatusLabelConverter}}"
+                                               FontSize="10"
+                                               FontWeight="SemiBold"
+                                               Foreground="{Binding Status, Converter={StaticResource StatusFgConverter}}" />
+                                </Border>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

@@ -1,0 +1,190 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:vm="using:FH6Mod.ViewModels.Pages"
+             x:Class="FH6Mod.Views.Pages.UnlocksView"
+             x:DataType="vm:UnlocksViewModel">
+
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="36,28" Spacing="20">
+
+            <!-- Header -->
+            <StackPanel Orientation="Horizontal" Spacing="14">
+                <Border Background="{DynamicResource Surface2Brush}"
+                        BorderBrush="{DynamicResource SurfaceBorderBrush}"
+                        BorderThickness="1" CornerRadius="10" Padding="10">
+                    <materialIcons:MaterialIcon Kind="{Binding PageIcon}" Width="22" Height="22"
+                                                Foreground="{DynamicResource AccentBrush}" />
+                </Border>
+                <StackPanel VerticalAlignment="Center" Spacing="2">
+                    <TextBlock Text="{Binding PageTitle}" Classes="h1" />
+                    <TextBlock Text="{Binding PageSubtitle}" Classes="subtle" />
+                </StackPanel>
+            </StackPanel>
+
+            <Border IsVisible="{Binding StatusMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                    Padding="14,10" CornerRadius="8" BorderThickness="1"
+                    Background="#1A3DDC97" BorderBrush="#3DDC97">
+                <TextBlock Text="{Binding StatusMessage}" FontSize="13"
+                           Foreground="{DynamicResource TextPrimary}" TextWrapping="Wrap" />
+            </Border>
+
+            <Border IsVisible="{Binding DiagnosticsMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                    Padding="14,10" CornerRadius="8" BorderThickness="1"
+                    Background="{DynamicResource Surface1Brush}"
+                    BorderBrush="{DynamicResource SurfaceBorderBrush}">
+                <StackPanel Spacing="6">
+                    <TextBlock Text="ENGINE LOG" Classes="eyebrow" />
+                    <TextBlock Text="{Binding DiagnosticsMessage}" FontSize="11"
+                               FontFamily="Consolas, Courier New, monospace"
+                               Foreground="{DynamicResource TextSecondary}" TextWrapping="Wrap" />
+                </StackPanel>
+            </Border>
+
+            <!-- Behaviour note -->
+            <Border Padding="14,10" CornerRadius="8" BorderThickness="1"
+                    Background="#1A4DA3FF" BorderBrush="#4DA3FF">
+                <StackPanel Spacing="4">
+                    <TextBlock FontWeight="SemiBold" FontSize="12" Foreground="#7FBFFF"
+                               Text="ℹ  How runtime hooks behave" />
+                    <TextBlock FontSize="12" TextWrapping="Wrap"
+                               Foreground="{DynamicResource TextSecondary}"
+                               Text="A hook overrides the game's value only when the game recalculates it. So the new value may not show up instantly — it kicks in next time the game touches that field: after finishing a race for Credits/XP, after a skill chain ends for Skill Points / Drift Score, after a wheelspin is granted, after selling a car for Sell Payout, etc. Toggle stays armed in the background — just go play and the values will update on the next game event." />
+                </StackPanel>
+            </Border>
+
+            <TextBlock Text="RUNTIME HOOKS — TESTED &amp; WORKING" Classes="eyebrow" />
+
+            <!-- Credits -->
+            <Border Classes="card" Padding="22">
+                <StackPanel Spacing="12">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="16">
+                        <Border Grid.Column="0" Width="42" Height="42" CornerRadius="10" Background="{DynamicResource Surface2Brush}">
+                            <materialIcons:MaterialIcon Kind="CashMultiple" Width="22" Height="22"
+                                Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                            <TextBlock Text="Credits" Classes="h3" />
+                            <TextBlock Text="Lock credits at custom value." Classes="dim" />
+                        </StackPanel>
+                        <ToggleSwitch Grid.Column="2" IsChecked="{Binding IsCreditsOn, Mode=OneWay}"
+                                      Command="{Binding ToggleCreditsCommand}" />
+                    </Grid>
+                    <Grid ColumnDefinitions="*,Auto,Auto,Auto,Auto" ColumnSpacing="8">
+                        <TextBox Grid.Column="0" Text="{Binding CreditsAmountText}" />
+                        <Button Grid.Column="1" Classes="ghost" Content="10K" Command="{Binding SetCreditsCommand}" CommandParameter="10000" />
+                        <Button Grid.Column="2" Classes="ghost" Content="1M" Command="{Binding SetCreditsCommand}" CommandParameter="1000000" />
+                        <Button Grid.Column="3" Classes="ghost" Content="100M" Command="{Binding SetCreditsCommand}" CommandParameter="100000000" />
+                        <Button Grid.Column="4" Classes="primary" Content="Apply" Command="{Binding ApplyCreditsCommand}" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Wheelspins -->
+            <Border Classes="card" Padding="22">
+                <StackPanel Spacing="12">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="16">
+                        <Border Grid.Column="0" Width="42" Height="42" CornerRadius="10" Background="{DynamicResource Surface2Brush}">
+                            <materialIcons:MaterialIcon Kind="SlotMachineOutline" Width="22" Height="22"
+                                Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                            <TextBlock Text="Wheelspins" Classes="h3" />
+                            <TextBlock Text="Set wheelspin count (must be unlocked in-game first)." Classes="dim" />
+                        </StackPanel>
+                        <ToggleSwitch Grid.Column="2" IsChecked="{Binding IsWheelspinsOn, Mode=OneWay}"
+                                      Command="{Binding ToggleWheelspinsCommand}" />
+                    </Grid>
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                        <TextBox Grid.Column="0" Text="{Binding WheelspinsAmountText}" />
+                        <Button Grid.Column="1" Classes="primary" Content="Apply" Command="{Binding ApplyWheelspinsCommand}" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Skill Points -->
+            <Border Classes="card" Padding="22">
+                <StackPanel Spacing="12">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="16">
+                        <Border Grid.Column="0" Width="42" Height="42" CornerRadius="10" Background="{DynamicResource Surface2Brush}">
+                            <materialIcons:MaterialIcon Kind="Star" Width="22" Height="22"
+                                Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                            <TextBlock Text="Skill Points" Classes="h3" />
+                            <TextBlock Text="Lock SP at custom value." Classes="dim" />
+                        </StackPanel>
+                        <ToggleSwitch Grid.Column="2" IsChecked="{Binding IsSkillPointsOn, Mode=OneWay}"
+                                      Command="{Binding ToggleSkillPointsCommand}" />
+                    </Grid>
+                    <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="8">
+                        <TextBox Grid.Column="0" Text="{Binding SkillPointsAmountText}" />
+                        <Button Grid.Column="1" Classes="ghost" Content="100" Command="{Binding SetSkillPointsCommand}" CommandParameter="100" />
+                        <Button Grid.Column="2" Classes="ghost" Content="10K" Command="{Binding SetSkillPointsCommand}" CommandParameter="10000" />
+                        <Button Grid.Column="3" Classes="primary" Content="Apply" Command="{Binding ApplySkillPointsCommand}" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Drift Score Multiplier -->
+            <Border Classes="card" Padding="22">
+                <StackPanel Spacing="12">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="16">
+                        <Border Grid.Column="0" Width="42" Height="42" CornerRadius="10" Background="{DynamicResource Surface2Brush}">
+                            <materialIcons:MaterialIcon Kind="ChartBellCurve" Width="22" Height="22"
+                                Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                            <TextBlock Text="Drift Score Multiplier" Classes="h3" />
+                            <TextBlock Text="Multiply drift score by N (int 1-100)." Classes="dim" />
+                        </StackPanel>
+                        <ToggleSwitch Grid.Column="2" IsChecked="{Binding IsDriftMultiOn, Mode=OneWay}"
+                                      Command="{Binding ToggleDriftMultiCommand}" />
+                    </Grid>
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                        <TextBox Grid.Column="0" Text="{Binding DriftMultiText}" />
+                        <Button Grid.Column="1" Classes="primary" Content="Apply" Command="{Binding ApplyDriftMultiCommand}" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- No Skill Break -->
+            <Border Classes="card" Padding="22">
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="16">
+                    <Border Grid.Column="0" Width="42" Height="42" CornerRadius="10" Background="{DynamicResource Surface2Brush}">
+                        <materialIcons:MaterialIcon Kind="ShieldOff" Width="22" Height="22"
+                            Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                        <TextBlock Text="No Skill Break" Classes="h3" />
+                        <TextBlock Text="Skill chain never breaks (crash, slow, off-road)." Classes="dim" />
+                    </StackPanel>
+                    <ToggleSwitch Grid.Column="2" IsChecked="{Binding IsNoSkillBreakOn, Mode=OneWay}"
+                                  Command="{Binding ToggleNoSkillBreakCommand}" />
+                </Grid>
+            </Border>
+
+            <!-- Sell Payout -->
+            <Border Classes="card" Padding="22">
+                <StackPanel Spacing="12">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="16">
+                        <Border Grid.Column="0" Width="42" Height="42" CornerRadius="10" Background="{DynamicResource Surface2Brush}">
+                            <materialIcons:MaterialIcon Kind="CashRefund" Width="22" Height="22"
+                                Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                            <TextBlock Text="Sell Payout x" Classes="h3" />
+                            <TextBlock Text="Multiply car sell price by N." Classes="dim" />
+                        </StackPanel>
+                        <ToggleSwitch Grid.Column="2" IsChecked="{Binding IsSellPayoutOn, Mode=OneWay}"
+                                      Command="{Binding ToggleSellPayoutCommand}" />
+                    </Grid>
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                        <TextBox Grid.Column="0" Text="{Binding SellPayoutText}" />
+                        <Button Grid.Column="1" Classes="primary" Content="Apply" Command="{Binding ApplySellPayoutCommand}" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

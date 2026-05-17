@@ -1,0 +1,21 @@
+# .NET build output
+bin/
+obj/
+*.user
+*.suo
+*.pdb
+*.binlog
+global.json
+
+# IDE
+.vs/
+.idea/
+*.swp
+.DS_Store
+
+# OS
+Thumbs.db
+
+# Local
+out/
+out_folder/
