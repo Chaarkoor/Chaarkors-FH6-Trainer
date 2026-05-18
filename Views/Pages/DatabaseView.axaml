@@ -2,11 +2,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:vm="using:FH6Mod.ViewModels.Pages"
+             xmlns:b="using:FH6Mod.Behaviors"
              x:Class="FH6Mod.Views.Pages.DatabaseView"
              x:DataType="vm:DatabaseViewModel">
 
     <ScrollViewer HorizontalScrollBarVisibility="Disabled">
-        <StackPanel Margin="36,28" Spacing="20">
+        <StackPanel Margin="36,28" Spacing="20" b:StaggerEntrance.Enable="True">
 
             <!-- Header -->
             <StackPanel Orientation="Horizontal" Spacing="14">

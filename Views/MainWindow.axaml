@@ -23,7 +23,14 @@
                 BorderThickness="0,0,0,1">
             <Grid ColumnDefinitions="Auto,*,Auto" Margin="16,0">
                 <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
-                    <Border Width="28" Height="28" CornerRadius="6" ClipToBounds="True">
+                    <Border x:Name="LogoBox" Width="28" Height="28" CornerRadius="6" ClipToBounds="True"
+                            Opacity="0" RenderTransform="scale(0.85)">
+                        <Border.Transitions>
+                            <Transitions>
+                                <DoubleTransition Property="Opacity" Duration="0:0:0.5" Easing="CubicEaseOut" />
+                                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.5" Easing="CubicEaseOut" />
+                            </Transitions>
+                        </Border.Transitions>
                         <Image Source="/Assets/logo.png" Stretch="UniformToFill" />
                     </Border>
                     <TextBlock Text="FH6 Mod" FontWeight="SemiBold" VerticalAlignment="Center" />
@@ -118,20 +125,14 @@
                 </Grid>
             </Border>
 
-            <!-- Content -->
-            <ContentControl Grid.Column="1"
-                            Content="{Binding CurrentPage}"
-                            Padding="0">
-                <ContentControl.Styles>
-                    <Style Selector="ContentControl">
-                        <Setter Property="Transitions">
-                            <Transitions>
-                                <DoubleTransition Property="Opacity" Duration="0:0:0.2" />
-                            </Transitions>
-                        </Setter>
-                    </Style>
-                </ContentControl.Styles>
-            </ContentControl>
+            <!-- Content — cross-fade between pages when SelectedItem changes -->
+            <TransitioningContentControl Grid.Column="1"
+                                         Content="{Binding CurrentPage}"
+                                         Padding="0">
+                <TransitioningContentControl.PageTransition>
+                    <CrossFade Duration="0:0:0.22" />
+                </TransitioningContentControl.PageTransition>
+            </TransitioningContentControl>
         </Grid>
 
         <!-- ===== Status bar ===== -->

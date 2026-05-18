@@ -27,6 +27,17 @@ public partial class MainWindow : Window
         updater.StateChanged += TryShowUpdateDialog;
         // In case the check already completed before the window opened
         TryShowUpdateDialog();
+
+        // Logo fade-in animation
+        var logo = this.FindControl<Border>("LogoBox");
+        if (logo is not null)
+        {
+            Dispatcher.UIThread.Post(() =>
+            {
+                logo.Opacity = 1.0;
+                logo.RenderTransform = Avalonia.Media.Transformation.TransformOperations.Parse("scale(1)");
+            }, DispatcherPriority.Background);
+        }
     }
 
     private void TryShowUpdateDialog()
@@ -71,5 +82,7 @@ public partial class MainWindow : Window
         var key = attached ? "StatusOk" : "StatusErr";
         if (Application.Current?.Resources[key] is IBrush brush)
             dot.Fill = brush;
+        // Toggle 'alive' class to trigger the pulse animation when attached
+        dot.Classes.Set("alive", attached);
     }
 }

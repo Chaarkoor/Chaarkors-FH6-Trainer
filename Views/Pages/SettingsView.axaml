@@ -2,11 +2,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:vm="using:FH6Mod.ViewModels.Pages"
+             xmlns:b="using:FH6Mod.Behaviors"
              x:Class="FH6Mod.Views.Pages.SettingsView"
              x:DataType="vm:SettingsViewModel">
 
     <ScrollViewer HorizontalScrollBarVisibility="Disabled">
-        <StackPanel Margin="36,28" Spacing="24">
+        <StackPanel Margin="36,28" Spacing="24" b:StaggerEntrance.Enable="True">
 
             <!-- Header -->
             <StackPanel Spacing="6">
@@ -24,6 +25,25 @@
                         <TextBlock Text="{Binding PageSubtitle}" Classes="subtle" />
                     </StackPanel>
                 </StackPanel>
+            </StackPanel>
+
+            <!-- Preferences -->
+            <StackPanel Spacing="10">
+                <TextBlock Text="PREFERENCES" Classes="eyebrow" />
+                <Border Classes="card" Padding="22">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="16">
+                        <Border Grid.Column="0" Width="42" Height="42" CornerRadius="10" Background="{DynamicResource Surface2Brush}">
+                            <materialIcons:MaterialIcon Kind="MotionPlayOutline" Width="22" Height="22"
+                                Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                            <TextBlock Text="UI animations" Classes="h3" />
+                            <TextBlock Text="Card stagger entrance, hover lift, status pulse, page transitions. Saved to disk — kept across launches." Classes="dim" TextWrapping="Wrap" />
+                        </StackPanel>
+                        <ToggleSwitch Grid.Column="2" VerticalAlignment="Center"
+                                      IsChecked="{Binding AnimationsEnabled, Mode=TwoWay}" />
+                    </Grid>
+                </Border>
             </StackPanel>
 
             <!-- ABOUT / CREDITS hero card -->
