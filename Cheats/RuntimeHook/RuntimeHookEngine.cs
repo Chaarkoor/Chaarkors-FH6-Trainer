@@ -234,40 +234,67 @@ public sealed class RuntimeHookEngine : IDisposable
         if (moduleBytes.Length == 0)
             throw new InvalidOperationException($"Could not read main module for {desc.Name} scan.");
 
-        var off = FindFirstPatternOffset(moduleBytes, desc.Signature);
-        if (off < 0)
-            throw new InvalidOperationException($"{desc.Name} signature was not found.\nSig: {desc.Signature}");
-
-        ulong hookAddr;
-        if (desc.ResolveCallTarget)
-        {
-            var callAddr = _mainBase + (ulong)off;
-            var head = ReadBytes(callAddr, 5);
-            if (head.Length < 5 || head[0] != 0xE8)
-                throw new InvalidOperationException($"{desc.Name} sig did not resolve to a CALL instruction.");
-            var rel = BitConverter.ToInt32(head, 1);
-            hookAddr = (ulong)((long)(callAddr + 5) + rel + desc.CallTargetOffset);
-        }
-        else
-        {
-            hookAddr = (ulong)((long)_mainBase + off + desc.MatchOffset);
-        }
-
-        var original = ReadBytes(hookAddr, desc.HookSize);
-        if (original.Length < desc.HookSize)
-            throw new InvalidOperationException($"Could not read {desc.Name} hook target at 0x{hookAddr:X}.");
-
-        if (!BytesStartWith(original, desc.ExpectedOriginal))
-        {
-            if (original.Length > 0 && original[0] == 0xE9)
-                throw new InvalidOperationException($"{desc.Name} hook target already patched by another tool. Close other trainers and retry.");
-            throw new InvalidOperationException($"{desc.Name} hook target bytes mismatch (FH6 may have updated). Found: {FormatBytes(original)}");
-        }
+        var hookAddr = FindProfileHookTarget(moduleBytes, desc);
 
         var det = CreateRuntimeDetour(desc, hookAddr);
         _hooks[desc.Key] = det;
         L($"{desc.Name} detour installed. target=0x{hookAddr:X}, detour=0x{det.DetourAddress:X}");
         return det;
+    }
+
+    /// <summary>
+    /// Multi-candidate signature resolver — ported from autoshow v1.4.1.
+    /// Instead of trusting the first pattern hit (which can be a false positive
+    /// when Turn 10 ships a binary update that accidentally matches our signature
+    /// elsewhere), we walk up to 128 matches and pick the first one whose target
+    /// bytes match <see cref="RuntimeProfileHookDescriptor.ExpectedOriginal"/>.
+    /// On total failure we report the most informative error we can: either
+    /// "signature missing", "already patched", or "bytes mismatch with sample".
+    /// </summary>
+    private ulong FindProfileHookTarget(byte[] moduleBytes, RuntimeProfileHookDescriptor desc)
+    {
+        var pattern = Pattern.Parse(desc.Signature);
+        bool anyMatchFound = false;
+        bool anyTargetPatched = false;
+        string firstMismatchSample = string.Empty;
+
+        foreach (var off in Pattern.FindAll(moduleBytes, pattern, 128))
+        {
+            anyMatchFound = true;
+
+            ulong hookAddr;
+            if (desc.ResolveCallTarget)
+            {
+                var callAddr = _mainBase + (ulong)off;
+                var head = ReadBytes(callAddr, 5);
+                // Not a CALL → wrong candidate, try the next one
+                if (head.Length < 5 || head[0] != 0xE8) continue;
+                var rel = BitConverter.ToInt32(head, 1);
+                hookAddr = (ulong)((long)(callAddr + 5) + rel + desc.CallTargetOffset);
+            }
+            else
+            {
+                hookAddr = (ulong)((long)_mainBase + off + desc.MatchOffset);
+            }
+
+            var original = ReadBytes(hookAddr, desc.HookSize);
+            if (original.Length < desc.HookSize) continue;
+
+            if (BytesStartWith(original, desc.ExpectedOriginal))
+                return hookAddr; // found a valid candidate — done
+
+            if (original.Length > 0 && original[0] == 0xE9)
+                anyTargetPatched = true;
+
+            if (string.IsNullOrEmpty(firstMismatchSample))
+                firstMismatchSample = FormatBytes(original);
+        }
+
+        if (!anyMatchFound)
+            throw new InvalidOperationException($"{desc.Name} signature was not found.\nSig: {desc.Signature}");
+        if (anyTargetPatched)
+            throw new InvalidOperationException($"{desc.Name} hook target already patched by another tool. Close other trainers and retry.");
+        throw new InvalidOperationException($"{desc.Name} hook target bytes mismatch (FH6 may have updated). Found: {firstMismatchSample}");
     }
 
     private RuntimeDetour CreateRuntimeDetour(RuntimeProfileHookDescriptor desc, ulong hookAddr)

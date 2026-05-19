@@ -15,9 +15,17 @@ public partial class MainWindowViewModel : ViewModelBase
     private readonly UpdateCheckService _updater;
 
     public ObservableCollection<NavItem> NavItems { get; }
+    public ObservableCollection<NavItem> FooterNavItems { get; }
 
-    [ObservableProperty]
-    private NavItem? _selectedItem;
+    // Two distinct selection properties — one per ListBox. We can't share a single
+    // SelectedItem across both nav lists because Avalonia's ListBox does NOT clear
+    // its visual selection when the bound value isn't found in its own ItemsSource,
+    // so a shared binding leaves both lists looking "selected" at once. Each list
+    // owns its own selection here; the partial methods below mirror picks across
+    // and drive CurrentPage. Guard flag stops the cross-clear from re-entering.
+    [ObservableProperty] private NavItem? _mainSelectedItem;
+    [ObservableProperty] private NavItem? _footerSelectedItem;
+    private bool _syncingNav;
 
     [ObservableProperty]
     private ViewModelBase? _currentPage;
@@ -65,31 +73,52 @@ public partial class MainWindowViewModel : ViewModelBase
         _updater.StateChanged += OnUpdateStateChanged;
         _updater.CheckInBackground();
 
+        // Main nav: only ship tabs that actually do something. Placeholder pages
+        // (Vehicle / Camera / World / Tuning / Customization / Misc / Bypass) still
+        // exist as VM/View files so they're trivial to re-enable when their mods get
+        // ported — just add them back to this list.
         NavItems = new ObservableCollection<NavItem>
         {
-            new("Dashboard",      MaterialIconKind.ViewDashboardOutline,        typeof(DashboardViewModel)),
-            new("Unlocks",        MaterialIconKind.LockOpenVariantOutline,      typeof(UnlocksViewModel)),
-            new("Vehicle",        MaterialIconKind.CarSports,            typeof(VehicleViewModel)),
-            new("Camera",         MaterialIconKind.CameraOutline,               typeof(CameraViewModel)),
-            new("World",          MaterialIconKind.EarthBox,                    typeof(WorldViewModel)),
-            new("Tuning",         MaterialIconKind.TuneVariant,                 typeof(TuningViewModel)),
-            new("Customization",  MaterialIconKind.PaletteOutline,              typeof(CustomizationViewModel)),
-            new("Database",       MaterialIconKind.DatabaseEditOutline,         typeof(DatabaseViewModel)),
-            new("Misc",           MaterialIconKind.DotsHorizontalCircleOutline, typeof(MiscViewModel)),
-            new("Bypass",         MaterialIconKind.ShieldHalfFull,              typeof(BypassViewModel)),
-            new("Settings",       MaterialIconKind.CogOutline,                  typeof(SettingsViewModel)),
+            new("Dashboard",      MaterialIconKind.ViewDashboardOutline,        typeof(DashboardViewModel),    IsWorking: true),
+            new("Unlocks",        MaterialIconKind.LockOpenVariantOutline,      typeof(UnlocksViewModel),      IsWorking: true),
+            new("Database",       MaterialIconKind.DatabaseEditOutline,         typeof(DatabaseViewModel),     IsWorking: true),
         };
 
-        SelectedItem = NavItems[0];
+        // Sidebar footer nav (single item — Settings). Shares SelectedItem with NavItems
+        // so clicking either list updates the page and clears the other list's highlight.
+        FooterNavItems = new ObservableCollection<NavItem>
+        {
+            new("Settings",       MaterialIconKind.CogOutline,                  typeof(SettingsViewModel),     IsWorking: true),
+        };
+
+        MainSelectedItem = NavItems[0];
 
         _gameProcess.StatusChanged += OnGameStatusChanged;
         OnGameStatusChanged();
     }
 
-    partial void OnSelectedItemChanged(NavItem? value)
+    partial void OnMainSelectedItemChanged(NavItem? value)
     {
-        if (value is null) return;
-        CurrentPage = (ViewModelBase)App.Services.GetRequiredService(value.PageType);
+        if (_syncingNav || value is null) return;
+        _syncingNav = true;
+        try
+        {
+            FooterSelectedItem = null;
+            CurrentPage = (ViewModelBase)App.Services.GetRequiredService(value.PageType);
+        }
+        finally { _syncingNav = false; }
+    }
+
+    partial void OnFooterSelectedItemChanged(NavItem? value)
+    {
+        if (_syncingNav || value is null) return;
+        _syncingNav = true;
+        try
+        {
+            MainSelectedItem = null;
+            CurrentPage = (ViewModelBase)App.Services.GetRequiredService(value.PageType);
+        }
+        finally { _syncingNav = false; }
     }
 
     private void OnGameStatusChanged()
@@ -150,6 +179,6 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 }
 
-public sealed record NavItem(string Label, MaterialIconKind Icon, Type PageType);
+public sealed record NavItem(string Label, MaterialIconKind Icon, Type PageType, bool IsWorking = false);
 
 public enum UpdateFooterStatus { Checking, UpToDate, UpdateAvailable, Failed }

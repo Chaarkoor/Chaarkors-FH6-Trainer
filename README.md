@@ -55,7 +55,9 @@ GPL-3.0 — source must remain open. See [LICENSE](LICENSE).
 
 ## 🙏 Credits
 
-This trainer wouldn't exist without **[Forza Mods](https://github.com/ForzaMods)** — the entire memory injection foundation (AOB scanning, function detouring, code caves, x64 shellcode generation, CRC bypass for FH6) comes from their open-source projects. All runtime hooks and the SQL executor mechanism are derivative work adapted to our UI and extended with original toggle-lock infrastructure.
+This trainer is a UI redesign — I don't write the cheats, I dress them up.
+
+Almost everything that actually does something here is a port of **Forza Horizon 6 - Autoshow Unlocker** by **paris' club** ([discord.gg/WSd3bRNJuJ](https://discord.gg/WSd3bRNJuJ)): every runtime hook (Credits, Wheelspins, Super Wheelspins, Skill Points, Sell Payout), every SQL feature (Free Cars, Autoshow Visible, Install Flags, Add All Cars, Clear NEW Tag), the memory injection foundation, CRC bypass, code caves — all theirs. My contribution is the Avalonia UI shell and a few QoL bits.
 
 Memory scanning powered by **[Reloaded.Memory](https://github.com/Reloaded-Project/Reloaded.Memory.Sigscan)** — SIMD-accelerated AOB scanner.
 

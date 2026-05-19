@@ -103,6 +103,28 @@
                 </StackPanel>
             </Border>
 
+            <!-- Super Wheelspins -->
+            <Border Classes="card" Padding="22">
+                <StackPanel Spacing="12">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="16">
+                        <Border Grid.Column="0" Width="42" Height="42" CornerRadius="10" Background="{DynamicResource Surface2Brush}">
+                            <materialIcons:MaterialIcon Kind="StarFourPointsOutline" Width="22" Height="22"
+                                Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                            <TextBlock Text="Super Wheelspins" Classes="h3" />
+                            <TextBlock Text="Set super wheelspin count (separate slot in the profile struct)." Classes="dim" />
+                        </StackPanel>
+                        <ToggleSwitch Grid.Column="2" IsChecked="{Binding IsSuperWheelspinsOn, Mode=OneWay}"
+                                      Command="{Binding ToggleSuperWheelspinsCommand}" />
+                    </Grid>
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                        <TextBox Grid.Column="0" Text="{Binding SuperWheelspinsAmountText}" />
+                        <Button Grid.Column="1" Classes="primary" Content="Apply" Command="{Binding ApplySuperWheelspinsCommand}" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+
             <!-- Skill Points -->
             <Border Classes="card" Padding="22">
                 <StackPanel Spacing="12">
@@ -127,8 +149,8 @@
                 </StackPanel>
             </Border>
 
-            <!-- Drift Score Multiplier -->
-            <Border Classes="card" Padding="22">
+            <!-- Drift Score Multiplier — BROKEN (game patched, autoshow 1.4.1 also fails) -->
+            <Border Classes="card broken" Padding="22" IsEnabled="False">
                 <StackPanel Spacing="12">
                     <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="16">
                         <Border Grid.Column="0" Width="42" Height="42" CornerRadius="10" Background="{DynamicResource Surface2Brush}">
@@ -136,32 +158,40 @@
                                 Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                         <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
-                            <TextBlock Text="Drift Score Multiplier" Classes="h3" />
-                            <TextBlock Text="Multiply drift score by N (int 1-100)." Classes="dim" />
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <TextBlock Text="Drift Score Multiplier" Classes="h3" />
+                                <Border Classes="brokenPill">
+                                    <TextBlock Text="CURRENTLY BROKEN" />
+                                </Border>
+                            </StackPanel>
+                            <TextBlock Text="Game-patched signature — even autoshow 1.4.1 can't find it." Classes="dim" />
                         </StackPanel>
-                        <ToggleSwitch Grid.Column="2" IsChecked="{Binding IsDriftMultiOn, Mode=OneWay}"
-                                      Command="{Binding ToggleDriftMultiCommand}" />
+                        <ToggleSwitch Grid.Column="2" IsChecked="False" IsEnabled="False" />
                     </Grid>
                     <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
-                        <TextBox Grid.Column="0" Text="{Binding DriftMultiText}" />
-                        <Button Grid.Column="1" Classes="primary" Content="Apply" Command="{Binding ApplyDriftMultiCommand}" />
+                        <TextBox Grid.Column="0" Text="{Binding DriftMultiText}" IsEnabled="False" />
+                        <Button Grid.Column="1" Classes="primary" Content="Apply" IsEnabled="False" />
                     </Grid>
                 </StackPanel>
             </Border>
 
-            <!-- No Skill Break -->
-            <Border Classes="card" Padding="22">
+            <!-- No Skill Break — BROKEN (autoshow 1.4.1 dropped this cheat entirely) -->
+            <Border Classes="card broken" Padding="22" IsEnabled="False">
                 <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="16">
                     <Border Grid.Column="0" Width="42" Height="42" CornerRadius="10" Background="{DynamicResource Surface2Brush}">
                         <materialIcons:MaterialIcon Kind="ShieldOff" Width="22" Height="22"
                             Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </Border>
                     <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
-                        <TextBlock Text="No Skill Break" Classes="h3" />
-                        <TextBlock Text="Skill chain never breaks (crash, slow, off-road)." Classes="dim" />
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <TextBlock Text="No Skill Break" Classes="h3" />
+                            <Border Classes="brokenPill">
+                                <TextBlock Text="CURRENTLY BROKEN" />
+                            </Border>
+                        </StackPanel>
+                        <TextBlock Text="Hook still installs but the game ignores the patched flag." Classes="dim" />
                     </StackPanel>
-                    <ToggleSwitch Grid.Column="2" IsChecked="{Binding IsNoSkillBreakOn, Mode=OneWay}"
-                                  Command="{Binding ToggleNoSkillBreakCommand}" />
+                    <ToggleSwitch Grid.Column="2" IsChecked="False" IsEnabled="False" />
                 </Grid>
             </Border>
 

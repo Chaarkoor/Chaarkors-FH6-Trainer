@@ -87,20 +87,21 @@
                     <ListBox Grid.Row="0"
                              Classes="nav"
                              ItemsSource="{Binding NavItems}"
-                             SelectedItem="{Binding SelectedItem}"
+                             SelectedItem="{Binding MainSelectedItem}"
                              Background="Transparent"
                              BorderThickness="0"
                              Padding="0,12,0,12">
                         <ListBox.ItemTemplate>
                             <DataTemplate x:DataType="vm:NavItem">
-                                <Grid ColumnDefinitions="3,Auto,*">
+                                <Grid ColumnDefinitions="3,Auto,*"
+                                      Classes.working="{Binding IsWorking}">
                                     <Border Grid.Column="0" Name="SelectionBar" />
-                                    <materialIcons:MaterialIcon Grid.Column="1"
+                                    <materialIcons:MaterialIcon Grid.Column="1" Name="NavIcon"
                                                                 Kind="{Binding Icon}"
                                                                 Width="18" Height="18"
                                                                 Margin="6,0,12,0"
                                                                 VerticalAlignment="Center" />
-                                    <TextBlock Grid.Column="2"
+                                    <TextBlock Grid.Column="2" Name="NavLabel"
                                                Text="{Binding Label}"
                                                VerticalAlignment="Center"
                                                FontSize="13" />
@@ -110,13 +111,43 @@
                     </ListBox>
 
                     <!-- Sidebar footer -->
-                    <Border Grid.Row="1" Padding="16,12,16,16">
+                    <Border Grid.Row="1" Padding="0,12,0,16">
                         <StackPanel Spacing="6">
-                            <TextBlock Text="EARLY ACCESS" Classes="eyebrow" />
-                            <TextBlock Text="UI scaffold — features wiring in progress."
-                                       Classes="dim" TextWrapping="Wrap" />
-                            <Separator Margin="0,4" Background="{DynamicResource SurfaceBorderBrush}" Height="1" />
-                            <TextBlock Classes="dim" FontSize="11">
+                            <StackPanel Margin="16,0" Spacing="4">
+                                <TextBlock Text="EARLY ACCESS" Classes="eyebrow" />
+                                <TextBlock Text="UI scaffold — features wiring in progress."
+                                           Classes="dim" TextWrapping="Wrap" />
+                            </StackPanel>
+
+                            <!-- Settings lives in the footer (separate selection from main nav;
+                                 sync handled by VM's OnMain/OnFooterSelectedItemChanged) -->
+                            <ListBox Classes="nav"
+                                     ItemsSource="{Binding FooterNavItems}"
+                                     SelectedItem="{Binding FooterSelectedItem}"
+                                     Background="Transparent"
+                                     BorderThickness="0"
+                                     Padding="0,6,0,4">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:NavItem">
+                                        <Grid ColumnDefinitions="3,Auto,*"
+                                              Classes.working="{Binding IsWorking}">
+                                            <Border Grid.Column="0" Name="SelectionBar" />
+                                            <materialIcons:MaterialIcon Grid.Column="1" Name="NavIcon"
+                                                                        Kind="{Binding Icon}"
+                                                                        Width="18" Height="18"
+                                                                        Margin="6,0,12,0"
+                                                                        VerticalAlignment="Center" />
+                                            <TextBlock Grid.Column="2" Name="NavLabel"
+                                                       Text="{Binding Label}"
+                                                       VerticalAlignment="Center"
+                                                       FontSize="13" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+
+                            <Separator Margin="16,4" Background="{DynamicResource SurfaceBorderBrush}" Height="1" />
+                            <TextBlock Margin="16,0" Classes="dim" FontSize="11">
                                 <Run Text="Crafted by " />
                                 <Run Text="Chaarkor" Foreground="{DynamicResource AccentBrush}" FontWeight="SemiBold" />
                             </TextBlock>
@@ -125,14 +156,21 @@
                 </Grid>
             </Border>
 
-            <!-- Content — cross-fade between pages when SelectedItem changes -->
-            <TransitioningContentControl Grid.Column="1"
-                                         Content="{Binding CurrentPage}"
-                                         Padding="0">
-                <TransitioningContentControl.PageTransition>
-                    <CrossFade Duration="0:0:0.22" />
-                </TransitioningContentControl.PageTransition>
-            </TransitioningContentControl>
+            <!-- Content — cross-fade between pages when SelectedItem changes.
+                 Wrapped in a Panel so the mouse-glow gradient can sit on the same
+                 layer (behind cards but above the window background). -->
+            <Panel Grid.Column="1">
+                <!-- Glow underlay: tracks pointer, IsHitTestVisible=False so it
+                     never intercepts clicks. Brush + animation in code-behind. -->
+                <Border x:Name="MouseGlow" IsHitTestVisible="False" />
+
+                <TransitioningContentControl Content="{Binding CurrentPage}"
+                                             Padding="0">
+                    <TransitioningContentControl.PageTransition>
+                        <CrossFade Duration="0:0:0.22" />
+                    </TransitioningContentControl.PageTransition>
+                </TransitioningContentControl>
+            </Panel>
         </Grid>
 
         <!-- ===== Status bar ===== -->

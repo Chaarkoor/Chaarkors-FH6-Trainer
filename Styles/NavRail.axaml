@@ -1,5 +1,6 @@
 <Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia">
 
     <!-- Nav rail = ListBox with Classes="nav" — every ListBoxItem child gets the look -->
     <Style Selector="ListBox.nav > ListBoxItem">
@@ -45,5 +46,14 @@
 
     <Style Selector="ListBox.nav > ListBoxItem:selected Border#SelectionBar">
         <Setter Property="Background" Value="{DynamicResource AccentBrush}" />
+    </Style>
+
+    <!-- "Working" tabs (Unlocks, Database) — accent-tinted icon + semibold label -->
+    <Style Selector="ListBox.nav > ListBoxItem Grid.working materialIcons|MaterialIcon#NavIcon">
+        <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
+    </Style>
+    <Style Selector="ListBox.nav > ListBoxItem Grid.working TextBlock#NavLabel">
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
     </Style>
 </Styles>

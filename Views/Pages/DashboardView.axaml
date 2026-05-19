@@ -1,8 +1,85 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:views="using:FH6Mod.Views"
+             xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:vm="using:FH6Mod.ViewModels.Pages"
+             xmlns:b="using:FH6Mod.Behaviors"
              x:Class="FH6Mod.Views.Pages.DashboardView"
              x:DataType="vm:DashboardViewModel">
-    <views:PageContainer />
+
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="36,28" Spacing="20" b:StaggerEntrance.Enable="True">
+
+            <!-- Page header -->
+            <StackPanel Orientation="Horizontal" Spacing="14">
+                <Border Background="{DynamicResource Surface2Brush}"
+                        BorderBrush="{DynamicResource SurfaceBorderBrush}"
+                        BorderThickness="1" CornerRadius="10" Padding="10">
+                    <materialIcons:MaterialIcon Kind="{Binding PageIcon}" Width="22" Height="22"
+                                                Foreground="{DynamicResource AccentBrush}" />
+                </Border>
+                <StackPanel VerticalAlignment="Center" Spacing="2">
+                    <TextBlock Text="{Binding PageTitle}" Classes="h1" />
+                    <TextBlock Text="{Binding PageSubtitle}" Classes="subtle" />
+                </StackPanel>
+            </StackPanel>
+
+            <!-- Card 1: status of currently shipping features (blue tint) -->
+            <Border Padding="22" CornerRadius="12" BorderThickness="1"
+                    Background="#1A4DA3FF" BorderBrush="#4DA3FF">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="18">
+                    <Border Grid.Column="0" Width="46" Height="46" CornerRadius="10"
+                            Background="#264DA3FF" VerticalAlignment="Top">
+                        <materialIcons:MaterialIcon Kind="InformationOutline" Width="24" Height="24"
+                            Foreground="#7FBFFF" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <StackPanel Grid.Column="1" Spacing="8">
+                        <TextBlock FontWeight="SemiBold" FontSize="15" Foreground="#7FBFFF"
+                                   Text="What works right now" />
+                        <TextBlock TextWrapping="Wrap" FontSize="13"
+                                   Foreground="{DynamicResource TextPrimary}"
+                                   Text="Only the Unlocks and Database tabs ship working features in this build &#x2014; everything you see there has been live-tested on Forza Horizon 6. As more mods for FH6 get released and ported in, fresh tabs will start appearing in the sidebar. Check back after each Forza patch cycle." />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Card 2: thank-you / early build note (green tint) -->
+            <Border Padding="22" CornerRadius="12" BorderThickness="1"
+                    Background="#1A3DDC97" BorderBrush="#3DDC97">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="18">
+                    <Border Grid.Column="0" Width="46" Height="46" CornerRadius="10"
+                            Background="#263DDC97" VerticalAlignment="Top">
+                        <materialIcons:MaterialIcon Kind="HeartOutline" Width="24" Height="24"
+                            Foreground="#6FE3B9" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <StackPanel Grid.Column="1" Spacing="8">
+                        <TextBlock FontWeight="SemiBold" FontSize="15" Foreground="#6FE3B9"
+                                   Text="Thanks for using the trainer" />
+                        <TextBlock TextWrapping="Wrap" FontSize="13"
+                                   Foreground="{DynamicResource TextPrimary}"
+                                   Text="Honestly didn't expect anyone to grab this restyle so quickly &#x2014; this is a very early build, so expect rough edges, missing pieces, and the occasional weird quirk. If something breaks or you have an idea worth porting, open an issue on the GitHub repo. Happy modding, and have fun. &#x2014; Chaarkor" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Card 3: pointer to Settings (personalisation + credits) (violet tint) -->
+            <Border Padding="22" CornerRadius="12" BorderThickness="1"
+                    Background="#1A8B5CF6" BorderBrush="#8B5CF6">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="18">
+                    <Border Grid.Column="0" Width="46" Height="46" CornerRadius="10"
+                            Background="#268B5CF6" VerticalAlignment="Top">
+                        <materialIcons:MaterialIcon Kind="CogOutline" Width="24" Height="24"
+                            Foreground="#B49DFB" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <StackPanel Grid.Column="1" Spacing="8">
+                        <TextBlock FontWeight="SemiBold" FontSize="15" Foreground="#B49DFB"
+                                   Text="Make it yours &#x2014; and see who built the cheats" />
+                        <TextBlock TextWrapping="Wrap" FontSize="13"
+                                   Foreground="{DynamicResource TextPrimary}"
+                                   Text="Head over to the Settings tab to pick an accent colour (10 palettes), toggle the ambient hover glow and animations, choose where settings get saved, and read the full credits &#x2014; including the paris' club Discord link, since almost every cheat in this trainer is a port of their Forza Horizon 6 - Autoshow Unlocker." />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
 </UserControl>

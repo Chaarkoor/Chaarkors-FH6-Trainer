@@ -31,6 +31,10 @@ public partial class UnlocksViewModel : PageViewModelBase
     [ObservableProperty] private bool _isWheelspinsOn;
     [ObservableProperty] private string _wheelspinsAmountText = "100";
 
+    // Super Wheelspins
+    [ObservableProperty] private bool _isSuperWheelspinsOn;
+    [ObservableProperty] private string _superWheelspinsAmountText = "100";
+
     // Skill Points
     [ObservableProperty] private bool _isSkillPointsOn;
     [ObservableProperty] private string _skillPointsAmountText = "10000";
@@ -108,6 +112,16 @@ public partial class UnlocksViewModel : PageViewModelBase
     }
     [RelayCommand] private void ApplyWheelspins()
         => ApplyValue(RuntimeProfileFeature.Wheelspins, Parse(WheelspinsAmountText, 100), "Wheelspins");
+
+    // ===== Super Wheelspins =====
+    [RelayCommand] private void ToggleSuperWheelspins()
+    {
+        var on = !_cheats.IsActive(RuntimeProfileFeature.SuperWheelspins);
+        Toggle(RuntimeProfileFeature.SuperWheelspins, on, Parse(SuperWheelspinsAmountText, 100), "Super Wheelspins");
+        IsSuperWheelspinsOn = _cheats.IsActive(RuntimeProfileFeature.SuperWheelspins);
+    }
+    [RelayCommand] private void ApplySuperWheelspins()
+        => ApplyValue(RuntimeProfileFeature.SuperWheelspins, Parse(SuperWheelspinsAmountText, 100), "Super Wheelspins");
 
     // ===== Skill Points =====
     [RelayCommand] private void ToggleSkillPoints()

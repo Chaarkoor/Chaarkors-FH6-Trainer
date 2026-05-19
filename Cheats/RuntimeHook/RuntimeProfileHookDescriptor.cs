@@ -4,6 +4,7 @@ public enum RuntimeProfileFeature
 {
     Credits,
     Wheelspins,
+    SuperWheelspins,
     SkillPoints,
     DriftScoreMultiplier,
     NoSkillBreak,
@@ -73,6 +74,24 @@ internal static class ProfileFeatureCatalog
                 128, 61, 21, 0, 0, 0, 1, 117, 9, 139,
                 21, 14, 0, 0, 0, 137, 87, 8, 51, 210,
                 139, 95, 8,
+            ],
+        },
+        // Super Wheelspins: identical to Wheelspins but the player struct stores
+        // the count at [rdi+0x18] instead of [rdi+0x08]. Signature ends 4F 18 vs 4F 10.
+        // ASM is byte-for-byte the Wheelspins payload with the three 0x08 displacements
+        // bumped to 0x10 (mov [rdi+0x10] / mov ebx,[rdi+0x10]).
+        RuntimeProfileFeature.SuperWheelspins => new()
+        {
+            Key = "SuperWheelspins", Name = "Super Wheelspins",
+            Signature = "48 89 5C 24 08 57 48 83 EC 20 48 8B FA 33 D2 48 8B 4F 18",
+            MatchOffset = 28, HookSize = 5,
+            ExpectedOriginal = [51, 210, 139, 95, 16],
+            ToggleOffset = 28, ValueOffset = 29,
+            Asm =
+            [
+                128, 61, 21, 0, 0, 0, 1, 117, 9, 139,
+                21, 14, 0, 0, 0, 137, 87, 16, 51, 210,
+                139, 95, 16,
             ],
         },
         RuntimeProfileFeature.SkillPoints => new()

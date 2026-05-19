@@ -78,3 +78,18 @@ public sealed class StatusFgConverter : IValueConverter
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         => throw new NotSupportedException();
 }
+
+/// <summary>
+/// Parses a hex color string ("#RRGGBB") into a SolidColorBrush. Used by the accent
+/// picker so palette swatches can render their own colour without a code-behind step.
+/// </summary>
+public sealed class HexToBrushConverter : IValueConverter
+{
+    public static readonly HexToBrushConverter Instance = new();
+
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+        => value is string s && Color.TryParse(s, out var c) ? new SolidColorBrush(c) : Brushes.Transparent;
+
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+        => throw new NotSupportedException();
+}

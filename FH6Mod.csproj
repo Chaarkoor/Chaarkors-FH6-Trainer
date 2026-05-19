@@ -16,12 +16,12 @@
     <DebugType>embedded</DebugType>
     <AssemblyName>ChaarkorFH6Mod</AssemblyName>
     <RootNamespace>FH6Mod</RootNamespace>
-    <Title>FH6 Mod by Chaarkor</Title>
-    <Product>FH6 Mod by Chaarkor — All-in-one trainer for Forza Horizon 6</Product>
-    <Authors>Chaarkor</Authors>
+    <Title>Chaarkor's FH6 Trainer</Title>
+    <Product>Chaarkor's FH6 Trainer — UI redesign of community FH6 mods</Product>
+    <Authors>Chaarkor (UI) · paris' club (cheats)</Authors>
     <Company>Chaarkor</Company>
-    <Copyright>© 2026 Chaarkor</Copyright>
-    <Description>All-in-one trainer for Forza Horizon 6. Built by Chaarkor. GPL-3.0.</Description>
+    <Copyright>© 2026 Chaarkor · cheats from paris' club · GPL-3.0</Copyright>
+    <Description>UI redesign of community FH6 mods (mainly Autoshow Unlocker by paris' club). Restyled by Chaarkor. GPL-3.0.</Description>
     <Version>0.3.0</Version>
     <AssemblyVersion>0.3.0.0</AssemblyVersion>
     <FileVersion>0.3.0.0</FileVersion>
